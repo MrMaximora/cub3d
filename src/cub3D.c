@@ -37,6 +37,12 @@ void    print_map(t_map *map)
     }
 }
 
+int main_loop(t_game *game)
+{
+    render_frame(game);
+    return (0);
+}
+
 int main(int ac, char **av)
 {
     t_game  game;
@@ -50,5 +56,10 @@ int main(int ac, char **av)
     print_map(&game.map);
     if (!validate_map(&game))
         printf("Map Invalid\n");
+    init_game(&game);
+    render_frame(&game);
+    mlx_hook(&game.mlx.win_ptr, 2, 1L << 0, &handle_keys, &game);
+    mlx_loop_hook(&game.mlx.mlx_ptr, &main_loop, &game);
+    mlx_loop(&game.mlx.mlx_ptr);
     free_map(&game.map);
 }

@@ -4,7 +4,10 @@ ft_utils.c \
 parser_map.c \
 get_next_line_utils.c \
 get_next_line.c \
-verif_closed.c
+verif_closed.c \
+init.c \
+raycast.c \
+keys.c
 
 SRC_DIR = ./src/
 MLX_DIR = ./minilibx-linux

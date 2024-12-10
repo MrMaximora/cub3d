@@ -50,8 +50,8 @@ typedef struct s_player
     double  ray_dir_y;
     double  plane_x;
     double  plane_y;
-    double move_speed;
-    double rot_speed;
+    double  move_speed;
+    double  rot_speed;
 }   t_player;
 
 typedef struct s_map
@@ -78,6 +78,7 @@ typedef struct s_game
 
 
 void	ft_error(char *str);
+void    init_game(t_game *game);
 void	ft_parser_map(t_game *game, char **av);
 char	*ft_strnstr(char *str, char *to_find, int len);
 unsigned int	ft_strlen(char *str);
@@ -95,5 +96,10 @@ void    ft_solver_fill(t_game *game, unsigned int start_x, unsigned int start_y)
 int     ft_last_verif(t_game *game);
 int     is_closed(t_game *game, unsigned int new_x, unsigned int new_y);
 void    print_map(t_map *map);
+void    calculate_ray(t_game *game, int x);
+void    perform_dda(t_game *game);
+int     handle_keys(int key, t_game *game);
+void    render_frame(t_game *game);
+void    draw_column(t_game *game, int x);
 
 #endif
