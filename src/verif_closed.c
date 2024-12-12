@@ -47,7 +47,7 @@ void ft_solver_fill(t_game *game, unsigned int start_x, unsigned int start_y)
             return;
         }
     }
-    print_map(&game->map);
+    print_map(game);
     free(stack);
 }
 
@@ -61,7 +61,7 @@ int ft_last_verif(t_game *game)
     while (x < game->map.height)    
     {
         y = 0;
-        while (y < game->map.width)
+        while (y < ft_strlen(game->map.grid[x]))
         {
             current = game->map.grid[x][y];
             if (current == '0' || current == 'V' || current == 'N')

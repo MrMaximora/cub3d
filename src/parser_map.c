@@ -92,9 +92,29 @@ int validate_map(t_game *game)
             if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
             {
                 player_count++;
-                game->player.player_x = x;
-                game->player.player_y = y;
+                game->player.player_x = (double)y;
+                game->player.player_y = (double)x;
                 game->player.player_dir = c;
+            }
+            if (c == 'N')
+            {
+                game->player.player_dir_x = 0;
+                game->player.player_dir_y = -1;
+            }
+            else if (c == 'S')
+            {
+                game->player.player_dir_x = 0;
+                game->player.player_dir_y = 1;
+            }
+            else if (c == 'E')
+            {
+                game->player.player_dir_x = 1;
+                game->player.player_dir_y = 0;
+            }
+            else if (c == 'W')
+            {
+                game->player.player_dir_x = -1;
+                game->player.player_dir_y = 0;
             }
             y++;
         }

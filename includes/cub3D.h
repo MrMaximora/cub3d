@@ -40,11 +40,13 @@ typedef struct s_mlx
 
 typedef struct s_player
 {
-    int     player_x;
-    int     player_y;
+    double    player_x;
+    double    player_y;
     int     step_x;
     int     step_y;
     char    player_dir;
+    double  player_dir_x;
+    double  player_dir_y;
     double  camera_x;
     double  ray_dir_x;
     double  ray_dir_y;
@@ -61,6 +63,8 @@ typedef struct s_map
     unsigned int    height;
     unsigned int    stack_size;
     unsigned int    top;
+    double          side_dist_x;
+    double          side_dist_y;
     double          delta_dist_x;
     double          delta_dist_y;
     double          perp_wall_dist;
@@ -95,11 +99,11 @@ int     validate_map(t_game *game);
 void    ft_solver_fill(t_game *game, unsigned int start_x, unsigned int start_y);
 int     ft_last_verif(t_game *game);
 int     is_closed(t_game *game, unsigned int new_x, unsigned int new_y);
-void    print_map(t_map *map);
+void    print_map(t_game *game);
 void    calculate_ray(t_game *game, int x);
 void    perform_dda(t_game *game);
 int     handle_keys(int key, t_game *game);
 void    render_frame(t_game *game);
-void    draw_column(t_game *game, int x);
+void    draw_column(t_game *game, char *buffer, int x);
 
 #endif
