@@ -28,14 +28,16 @@
 
 typedef struct s_point
 {
-    unsigned int x;
-    unsigned int y;
+    int y;
+    int x;
 } t_point;
 
 typedef struct s_mlx
 {
     void    *mlx_ptr;
     void    *win_ptr;
+    int     height_windows;
+    int     width_windows;
 } t_mlx;
 
 typedef struct s_player
@@ -59,10 +61,10 @@ typedef struct s_player
 typedef struct s_map
 {
     char            **grid;
-    unsigned int    width;
-    unsigned int    height;
-    unsigned int    stack_size;
-    unsigned int    top;
+    int    width;
+    int    height;
+    int    stack_size;
+    int    top;
     double          side_dist_x;
     double          side_dist_y;
     double          delta_dist_x;
@@ -85,7 +87,7 @@ void	ft_error(char *str);
 void    init_game(t_game *game);
 void	ft_parser_map(t_game *game, char **av);
 char	*ft_strnstr(char *str, char *to_find, int len);
-unsigned int	ft_strlen(char *str);
+int	    ft_strlen(char *str);
 char	*ft_strdup(char *s);
 void    ft_init_map(t_map *map);
 void    ft_read_map(t_game *game, int fd);
@@ -96,14 +98,15 @@ char	*gnl(int fd);
 size_t	ft_strlen_gnl(const char *str);
 int     is_valid_char(char c);
 int     validate_map(t_game *game);
-void    ft_solver_fill(t_game *game, unsigned int start_x, unsigned int start_y);
+void    ft_solver_fill(t_game *game, int start_y, int start_x);
 int     ft_last_verif(t_game *game);
-int     is_closed(t_game *game, unsigned int new_x, unsigned int new_y);
+int     is_closed(t_game *game, int new_y, int new_x);
 void    print_map(t_game *game);
 void    calculate_ray(t_game *game, int x);
 void    perform_dda(t_game *game);
 int     handle_keys(int key, t_game *game);
 void    render_frame(t_game *game);
 void    draw_column(t_game *game, char *buffer, int x);
+int     handle_key_release(int key, t_game *game);
 
 #endif

@@ -61,9 +61,9 @@ void	ft_parser_map(t_game *game, char **av)
     close(fd);
 }
 
-int is_closed(t_game *game, unsigned int new_x, unsigned int new_y)
+int is_closed(t_game *game, int new_y, int new_x)
 {
-    ft_solver_fill(game, new_x, new_y);
+    ft_solver_fill(game, new_y, new_x);
     if (ft_last_verif(game) == 0)
         return (1);
     return (0);
@@ -71,29 +71,30 @@ int is_closed(t_game *game, unsigned int new_x, unsigned int new_y)
 
 int validate_map(t_game *game)
 {
-    unsigned int     x;
-    unsigned int     y;
+    int     x;
+    int     y;
     int     player_count;
     char    c;
 
-    x = 0;
+    y = 0;
     player_count = 0;
-    while (x < game->map.height)
+    while (y < game->map.height)
     {
-        y = 0;
-        while (y < game->map.width && game->map.grid[x][y] != '\0')
+        x = 0;
+        while (x < game->map.width && game->map.grid[y][x] != '\0')
         {
-            c = game->map.grid[x][y];
+            c = game->map.grid[y][x];
             if (!is_valid_char(c))
             {
-                printf("Error: Invalid character '%c' at (%d, %d)\n", c, x, y);
+                printf("Error: Invalid character '%c' at (%d, %d)\n", c, y, x);
                 return (0);
             }
             if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
             {
                 player_count++;
-                game->player.player_x = (double)y;
-                game->player.player_y = (double)x;
+                game->player.player_y = (double)y + 0.5;
+                game->player.player_x = (double)x + 0.5;
+                printf("player_y = %f , player_x = %f\n", game->player.player_y, game->player.player_x);
                 game->player.player_dir = c;
             }
             if (c == 'N')
@@ -116,16 +117,16 @@ int validate_map(t_game *game)
                 game->player.player_dir_x = -1;
                 game->player.player_dir_y = 0;
             }
-            y++;
+            x++;
         }
-        x++;
+        y++;
     }
     if (player_count != 1)
     {
         printf("Error: Invalid number of players (found %d)\n", player_count);
         return (0);
     }
-    if (!is_closed(game, game->player.player_x, game->player.player_y))
+    if (!is_closed(game, game->player.player_y, game->player.player_x))
     {
         printf("Error: Map is not closed!\n");
         return (0);

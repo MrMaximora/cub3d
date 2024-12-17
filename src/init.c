@@ -15,13 +15,12 @@
 
 void init_game(t_game *game)
 {
-    t_player    player;
-
-    player = game->player;
+    game->mlx.height_windows = 720;
+    game->mlx.width_windows = 1280;
     game->mlx.mlx_ptr = mlx_init();
     if (!game->mlx.mlx_ptr)
         exit(EXIT_FAILURE);
-    game->mlx.win_ptr = mlx_new_window(game->mlx.mlx_ptr, 800, 600, "cub3D");
+    game->mlx.win_ptr = mlx_new_window(game->mlx.mlx_ptr, game->mlx.width_windows, game->mlx.height_windows, "cub3D");
     if (!game->mlx.mlx_ptr)
         exit(EXIT_FAILURE);
     game->player.player_x = 0.0;

@@ -19,15 +19,8 @@ void calculate_ray(t_game *game, int x)
     game->player.plane_y = game->player.player_dir_x * 0.66;
     game->player.ray_dir_x = game->player.player_dir_x + game->player.plane_x * game->player.camera_x;
     game->player.ray_dir_y = game->player.player_dir_y + game->player.plane_y * game->player.camera_x;
-    game->map.stack_size = (int)game->player.player_x;
-    game->map.top = (int)game->player.player_y;
-    game->map.delta_dist_x = fabs(1 / game->player.ray_dir_x);
+    game->map.delta_dist_x = fabs(1 / game->player.ray_dir_x);  
     game->map.delta_dist_y = fabs(1 / game->player.ray_dir_y);
-    printf("ray_dir_x: %f, ray_dir_y: %f, player_dir_x: %f, player_dir_y: %f, plane_x: %f, plane_y: %f, camera_x: %f\n", 
-           game->player.ray_dir_x, game->player.ray_dir_y, 
-           game->player.player_dir_x, game->player.player_dir_y, 
-           game->player.plane_x, game->player.plane_y, 
-           game->player.camera_x);
 }
 
 void perform_dda(t_game *game)
@@ -35,7 +28,7 @@ void perform_dda(t_game *game)
     int map_x = (int)game->player.player_x;
     int map_y = (int)game->player.player_y;
 
-    // Step and initial side distance initialization based on ray direction
+    // Calculate step and initial side distance
     if (game->player.ray_dir_x < 0)
     {
         game->player.step_x = -1;
@@ -57,80 +50,86 @@ void perform_dda(t_game *game)
         game->player.step_y = 1;
         game->map.side_dist_y = (map_y + 1.0 - game->player.player_y) * game->map.delta_dist_y;
     }
-
-    // Perform Digital Differential Analysis (DDA)
-    game->map.hit_wall = 0;
-    while (game->map.hit_wall == 0)
+    
+    // Perform the DDA algorithm
+    while (1)
     {
-        // Choose whether to step in the X direction or the Y direction
         if (game->map.side_dist_x < game->map.side_dist_y)
         {
             game->map.side_dist_x += game->map.delta_dist_x;
             map_x += game->player.step_x;
-            game->map.side = 0; // Hit vertical wall
+            game->map.side = 0; // Ray hits the X axis
         }
         else
         {
             game->map.side_dist_y += game->map.delta_dist_y;
             map_y += game->player.step_y;
-            game->map.side = 1; // Hit horizontal wall
+            game->map.side = 1; // Ray hits the Y axis
         }
 
-        // Check if the ray has hit a wall
-        if (game->map.grid[map_y][map_x] == '1')  // Wall detected
+        // Ensure map coordinates are within bounds of the map row
+        if (map_y < 0 || map_y >= game->map.height || map_x < 0 || map_x >= ft_strlen(game->map.grid[map_y]))
+            return;
+
+        // Check for wall collision
+        if (game->map.grid[map_y][map_x] == '1') // Wall hit
         {
-            game->map.hit_wall = 1;
-        }
-        // If you hit the edge of the map, break the loop
-        if ((unsigned int)map_x >= game->map.width || (unsigned int)map_y >= game->map.height)
-        {
-            printf("Ray went out of bounds at (%d, %d)\n", map_x, map_y);
-            game->map.hit_wall = 1; // Break the loop
+            // Calculate the perpendicular distance to the wall
+            if (game->map.side == 0)
+                game->map.perp_wall_dist = (map_x - game->player.player_x + (1 - game->player.step_x) / 2) / game->player.ray_dir_x;
+            else
+                game->map.perp_wall_dist = (map_y - game->player.player_y + (1 - game->player.step_y) / 2) / game->player.ray_dir_y;
+            printf("Perpendicular distance: %f\n", game->map.perp_wall_dist);
+            return;
         }
     }
-
-    // Final map coordinates where the ray hit the wall
-    game->map.stack_size = map_x;  // Final X map coordinate
-    game->map.top = map_y;         // Final Y map coordinate
-
-    // Optional: Debugging output to see the results
-    printf("Hit wall at (%d, %d), side: %d\n", map_x, map_y, game->map.side);
 }
-
 
 
 void draw_column(t_game *game, char *buffer, int x)
 {
-    unsigned int line_height;
-    unsigned int draw_start, draw_end;
-    unsigned int y;
+    int line_height;
+    int draw_start, draw_end;
     int color;
 
-    if (game->map.side == 0)
-        game->map.perp_wall_dist = (game->map.stack_size - game->player.player_x + (1 - game->player.step_x) / 2) / game->player.ray_dir_x;
-    else
-        game->map.perp_wall_dist = (game->map.top - game->player.player_y + (1 - game->player.step_y) / 2) / game->player.ray_dir_y;
-
-    line_height = (int)(game->map.height / game->map.perp_wall_dist);
-    draw_start = -line_height / 2 + game->map.height / 2;
-    if (draw_start < 0)
-        draw_start = 0;
-    draw_end = line_height / 2 + game->map.height / 2;
-    if (draw_end >= game->map.height)
-        draw_end = game->map.height - 1;
-
-    color = (game->map.side == 1) ? 0xAAAAAA : 0xFFFFFF; // Adjust color based on wall side
-    for (y = draw_start; y <= draw_end; y++)
+    // Ensure the x position is within valid bounds
+    if (x < 0 || x >= game->mlx.width_windows) 
     {
-        unsigned int pixel_pos = y * game->map.width * 4 + x * 4;
-        if (pixel_pos < game->map.width * game->map.height * 4) // Bounds check
+        printf("Error: x (%d) out of bounds (0-%d)\n", x, game->mlx.width_windows - 1);
+        return;
+    }
+    // Calculate the perpendicular wall distance and line height
+    line_height = (int)(game->mlx.height_windows / game->map.perp_wall_dist);
+    if (line_height > game->mlx.height_windows)
+        line_height = game->mlx.height_windows;
+    // Find the start and end points to draw the column
+    draw_start = (-line_height / 2) + (game->mlx.height_windows / 2);
+    draw_end = (line_height / 2) + (game->mlx.height_windows / 2);
+    // Ensure the start and end points are within valid bounds
+    if (draw_start < 0) 
+        draw_start = 0;
+    if (draw_end >= game->mlx.height_windows) 
+        draw_end = game->mlx.height_windows - 1;
+    // Debug information
+    //printf("Line height: %d, Draw start: %d, Draw end: %d\n", line_height, draw_start, draw_end);
+    // Set the color for the wall (change depending on side)
+    color = (game->map.side == 1) ? 0xAAAAAA : 0xFFFFFF;
+    // Draw the column
+    for (int y = draw_start; y <= draw_end; y++)
+    {
+        int pixel_pos = y * game->mlx.width_windows + x;
+        printf("Pixel position: %d, Y: %d, X: %d\n", pixel_pos, y, x);
+        if (pixel_pos < 0 || pixel_pos >= game->mlx.width_windows * game->mlx.height_windows)
         {
-            buffer[pixel_pos + 0] = color & 0xFF;         // Blue
-            buffer[pixel_pos + 1] = (color >> 8) & 0xFF;  // Green
-            buffer[pixel_pos + 2] = (color >> 16) & 0xFF; // Red
+            printf("Error: pixel_pos (%d) out of bounds. y=%d\n", pixel_pos, y);
+            continue;
         }
+        buffer[pixel_pos + 0] = color & 0xFF;         // Blue
+        buffer[pixel_pos + 1] = (color >> 8) & 0xFF;  // Green
+        buffer[pixel_pos + 2] = (color >> 16) & 0xFF; // Red
     }
 }
+
 
 
 void render_frame(t_game *game)
@@ -138,16 +137,17 @@ void render_frame(t_game *game)
     void *image;
     char *buffer;
     int bpp, size_line, endian;
-    unsigned int x;
+    int x;
 
-    image = mlx_new_image(game->mlx.mlx_ptr, game->map.width, game->map.height);
+    image = mlx_new_image(game->mlx.mlx_ptr, game->mlx.width_windows, game->mlx.height_windows);
     if (!image)
         exit(EXIT_FAILURE);
     buffer = mlx_get_data_addr(image, &bpp, &size_line, &endian);
     if (!buffer)
         exit(EXIT_FAILURE);
+    //printf("Buffer info - bpp: %d, size_line: %d, endian: %d\n", bpp, size_line, endian);
     x = 0;
-    while (x < game->map.width)
+    while (x < game->mlx.width_windows)
     {
         calculate_ray(game, x);
         perform_dda(game);
