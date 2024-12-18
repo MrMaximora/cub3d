@@ -21,7 +21,6 @@ void calculate_ray(t_game *game, int x)
     game->map.map_y = (int)game->player.player_y;
     game->map.delta_dist_x = fabs(1 / game->player.ray_dir_x);
     game->map.delta_dist_y = fabs(1 / game->player.ray_dir_y);
-    printf("camera = %f ray_dir = x : %f y : %f map x = %d map y = %d, delta_dist x = %f, delta_dist y = %f\n", game->player.camera_x, game->player.ray_dir_x , game->player.ray_dir_y , game->map.map_x, game->map.map_y, game->map.delta_dist_x, game->map.delta_dist_y );    
     calculate_step_and_side_dist(game);
 }
 
@@ -108,12 +107,15 @@ void render_frame(t_game *game)
         exit(EXIT_FAILURE);
     for (x = 0; x < game->mlx.width_windows; x++)
     {
+        game->map.hit_wall = 0;
         calculate_ray(game, x);
         perform_dda(game);
         calculate_wall_height(game);
+        /*printf("Column: %d, Camera X: %f, Ray Dir: (%f, %f), Side Dist: (%f, %f), Perp Wall Dist: %f\n",
+        x, game->player.camera_x, game->player.ray_dir_x, game->player.ray_dir_y,
+        game->map.side_dist_x, game->map.side_dist_y, game->map.perp_wall_dist);*/
         draw_column(game, buffer, x);
     }
-
     mlx_put_image_to_window(game->mlx.mlx_ptr, game->mlx.win_ptr, image, 0, 0);
     mlx_destroy_image(game->mlx.mlx_ptr, image);
 }
@@ -122,11 +124,11 @@ void draw_column(t_game *game, char *buffer, int x)
 {
     int y;
     int ceiling_color = 0x87CEEB; // Light blue
-    int wall_color = (game->map.side == 1) ? 0xAAAAAA : 0xFFFFFF; // Dimmer color for Y-side walls
+    int wall_color = 0xFF0000;// Dimmer color for Y-side walls
     int floor_color = 0x228B22;  // Forest green
 
-    printf("Column: %d, perp_wall_dist: %f, line_height: %d, draw_start: %d, draw_end: %d\n",
-           x, game->map.perp_wall_dist, game->map.line_height, game->map.draw_start, game->map.draw_end);
+    /*printf("Column: %d, perp_wall_dist: %f, line_height: %d, draw_start: %d, draw_end: %d\n",
+           x, game->map.perp_wall_dist, game->map.line_height, game->map.draw_start, game->map.draw_end);*/
     for (y = 0; y < game->map.draw_start; y++)
     {
         int pixel_pos = y * game->mlx.width_windows + x;

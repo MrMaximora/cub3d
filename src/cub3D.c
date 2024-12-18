@@ -61,7 +61,7 @@ int main(int ac, char **av)
     render_frame(&game);
     mlx_hook(game.mlx.win_ptr, 2, 1L << 0, handle_keys, &game);
     mlx_hook(game.mlx.win_ptr, 3, 1L << 1, handle_key_release, &game);
-    //mlx_loop_hook(game.mlx.mlx_ptr, main_loop, &game);
+    mlx_loop_hook(game.mlx.mlx_ptr, main_loop, &game);
     mlx_loop(game.mlx.mlx_ptr);
     free_map(&game.map);
 }

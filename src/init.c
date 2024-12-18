@@ -30,6 +30,8 @@ void init_game(t_game *game)
     game->player.ray_dir_x = 0.0;
     game->map.delta_dist_x = 0.0;
     game->player.ray_dir_y = 0.0;
+    game->player.player_dir_x = 0.0;
+    game->player.player_dir_y = 0.0;
     game->map.delta_dist_y = 0.0;
     game->player.move_speed = 0.1;
     game->player.rot_speed = 0.05;

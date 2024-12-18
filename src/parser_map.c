@@ -101,29 +101,31 @@ int validate_map(t_game *game)
             {
                 game->player.player_dir_x = 0;
                 game->player.player_dir_y = -1;
-                game->player.plane_x = 0.66;
-                game->player.plane_y = 0.0;
+                double length_plane = tan(66 / 2 * (M_PI / 180));
+                game->player.plane_x = length_plane * -game->player.player_dir_y;
+                game->player.plane_y = length_plane * game->player.player_dir_x;
+                printf("plane : [%f, %f]\n", game->player.plane_x, game->player.plane_y);
             }
             else if (c == 'S')
             {
                 game->player.player_dir_x = 0;
                 game->player.player_dir_y = 1;
-                game->player.plane_x = 0.66;
-                game->player.plane_y = 0.0;
+                game->player.plane_x = 0.64;
+                game->player.plane_y = 0.00;
             }
             else if (c == 'E')
             {
                 game->player.player_dir_x = 1;
                 game->player.player_dir_y = 0;
                 game->player.plane_x = 0.00;
-                game->player.plane_y = 0.66;
+                game->player.plane_y = 0.64;
             }
             else if (c == 'W')
             {
                 game->player.player_dir_x = -1;
                 game->player.player_dir_y = 0;
                 game->player.plane_x = 0.00;
-                game->player.plane_y = 0.66;
+                game->player.plane_y = 0.64;
             }
             x++;
         }
