@@ -61,10 +61,15 @@ typedef struct s_player
 typedef struct s_map
 {
     char            **grid;
-    int    width;
-    int    height;
-    int    stack_size;
-    int    top;
+    int             width;
+    int             height;
+    int             stack_size;
+    int             top;
+    int             line_height;
+    int             draw_start;
+    int             draw_end;
+    int             map_y;
+    int             map_x;
     double          side_dist_x;
     double          side_dist_y;
     double          delta_dist_x;
@@ -108,5 +113,8 @@ int     handle_keys(int key, t_game *game);
 void    render_frame(t_game *game);
 void    draw_column(t_game *game, char *buffer, int x);
 int     handle_key_release(int key, t_game *game);
+void    calculate_wall_height(t_game *game);
+void    calculate_dist(t_game *game);
+void    calculate_step_and_side_dist(t_game *game);
 
 #endif

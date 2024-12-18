@@ -101,21 +101,29 @@ int validate_map(t_game *game)
             {
                 game->player.player_dir_x = 0;
                 game->player.player_dir_y = -1;
+                game->player.plane_x = 0.66;
+                game->player.plane_y = 0.0;
             }
             else if (c == 'S')
             {
                 game->player.player_dir_x = 0;
                 game->player.player_dir_y = 1;
+                game->player.plane_x = 0.66;
+                game->player.plane_y = 0.0;
             }
             else if (c == 'E')
             {
                 game->player.player_dir_x = 1;
                 game->player.player_dir_y = 0;
+                game->player.plane_x = 0.00;
+                game->player.plane_y = 0.66;
             }
             else if (c == 'W')
             {
                 game->player.player_dir_x = -1;
                 game->player.player_dir_y = 0;
+                game->player.plane_x = 0.00;
+                game->player.plane_y = 0.66;
             }
             x++;
         }
