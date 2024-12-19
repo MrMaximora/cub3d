@@ -7,7 +7,8 @@ get_next_line.c \
 verif_closed.c \
 init.c \
 raycast.c \
-keys.c
+keys.c \
+move.c
 
 SRC_DIR = ./src/
 MLX_DIR = ./minilibx-linux
