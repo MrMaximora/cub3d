@@ -46,6 +46,12 @@ typedef struct s_player
     double    player_y;
     int     step_x;
     int     step_y;
+    int     move_forward;
+    int     move_backward;
+    int     strafe_left;
+    int     strafe_right;
+    int     rotate_left;
+    int     rotate_right;
     char    player_dir;
     double  player_dir_x;
     double  player_dir_y;
@@ -61,6 +67,12 @@ typedef struct s_player
 typedef struct s_map
 {
     char            **grid;
+    char            *texture_wall_n;
+    char            *texture_wall_s;
+    char            *texture_wall_e;
+    char            *texture_wall_w;
+    char            *cap_color;
+    char            *floor_color;
     int             width;
     int             height;
     int             stack_size;
@@ -70,6 +82,7 @@ typedef struct s_map
     int             draw_end;
     int             map_y;
     int             map_x;
+    int             n_textures;
     double          side_dist_x;
     double          side_dist_y;
     double          delta_dist_x;
@@ -116,5 +129,18 @@ void    calculate_wall_height(t_game *game);
 void    calculate_dist(t_game *game);
 void    calculate_step_and_side_dist(t_game *game);
 void    move_forward(t_game *game);
+void    move_backward(t_game *game);
+void    strafe_left(t_game *game);
+void    strafe_right(t_game *game);
+void    rotate_left(t_game *game);
+void    rotate_right(t_game *game);
+int     handle_keys_release(int key, t_game *game);
+void    update_player_pos(t_game *game);
+void    free_map(t_map *map);
+int     exit_prog(t_game *game);
+int     is_white_space(char c);
+void    take_texture_wall(t_game *game, int fd);
+int     ft_strncmp(char *s1, char *s2, unsigned int n);
+char    *path_texture(t_game *game, char *line);
 
 #endif

@@ -8,7 +8,8 @@ verif_closed.c \
 init.c \
 raycast.c \
 keys.c \
-move.c
+move.c \
+parse_text.c
 
 SRC_DIR = ./src/
 MLX_DIR = ./minilibx-linux

@@ -75,3 +75,22 @@ int is_valid_char(char c)
 {
     return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == ' ');
 }
+
+int	is_white_space(char c)
+{
+	return (c == ' ' || c == '\t');
+}
+
+int	ft_strncmp(char *s1, char *s2, unsigned int n)
+{
+	unsigned int	pos;
+
+	pos = 0;
+	if (n == 0)
+		return (0);
+	while ((s1[pos] == s2[pos]) && (s1[pos] && s2[pos]) && pos < n - 1)
+	{
+		pos++;
+	}
+	return (s1[pos] - s2[pos]);
+}

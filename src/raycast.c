@@ -111,9 +111,6 @@ void render_frame(t_game *game)
         calculate_ray(game, x);
         perform_dda(game);
         calculate_wall_height(game);
-        /*printf("Column: %d, Camera X: %f, Ray Dir: (%f, %f), Side Dist: (%f, %f), Perp Wall Dist: %f\n",
-        x, game->player.camera_x, game->player.ray_dir_x, game->player.ray_dir_y,
-        game->map.side_dist_x, game->map.side_dist_y, game->map.perp_wall_dist);*/
         draw_column(game, buffer, x);
     }
     mlx_put_image_to_window(game->mlx.mlx_ptr, game->mlx.win_ptr, image, 0, 0);
@@ -123,12 +120,10 @@ void render_frame(t_game *game)
 void draw_column(t_game *game, char *buffer, int x)
 {
     int y;
-    int ceiling_color = 0x87CEEB; // Light blue
-    int wall_color = 0xFF0000;// Dimmer color for Y-side walls
-    int floor_color = 0x228B22;  // Forest green
+    int ceiling_color = 0x87CEEB;
+    int wall_color = 0xFF0000;
+    int floor_color = 0x228B22;
 
-    /*printf("Column: %d, perp_wall_dist: %f, line_height: %d, draw_start: %d, draw_end: %d\n",
-           x, game->map.perp_wall_dist, game->map.line_height, game->map.draw_start, game->map.draw_end);*/
     for (y = 0; y < game->map.draw_start; y++)
     {
         int pixel_pos = y * game->mlx.width_windows + x;
