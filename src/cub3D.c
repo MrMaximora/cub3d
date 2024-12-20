@@ -14,7 +14,11 @@
 
 int exit_prog(t_game *game)
 {
-	free_map(&game->map);
+    free(game->map.texture_wall_n);
+    free(game->map.texture_wall_s);
+    free(game->map.texture_wall_e);
+    free(game->map.texture_wall_w);
+    free_map(&game->map);
     if (game->mlx.mlx_ptr && game->mlx.win_ptr)
 		mlx_destroy_window(game->mlx.mlx_ptr, game->mlx.win_ptr);
 	if (game->mlx.mlx_ptr)
@@ -28,6 +32,8 @@ void    free_map(t_map *map)
     int i;
     
     i = 0;
+    if(!map->grid)
+        return;
     while (i < map->height) 
     {
         free(map->grid[i]);

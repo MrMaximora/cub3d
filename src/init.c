@@ -26,8 +26,10 @@ void init_game(t_game *game)
     game->map.texture_wall_e = NULL;
     game->map.texture_wall_s = NULL;
     game->map.texture_wall_w = NULL;
-    game->map.floor_color = NULL;
-    game->map.cap_color = NULL;
+    game->map.floor_color = 0;
+    game->map.cap_color = 0;
+    game->map.n_colors  = 0;
+    game->map.n_textures = 0;
     game->player.player_x = 0.0;
     game->player.player_y = 0.0;
     game->player.ray_dir_x = 0.0;
@@ -50,4 +52,7 @@ void init_game(t_game *game)
     game->player.rotate_left = 0;
     game->player.rotate_right = 0;
     game->map.n_textures = 0;
+    game->map.grid = NULL;
+    game->map.height = 0;
+    game->map.width = 0;
 }

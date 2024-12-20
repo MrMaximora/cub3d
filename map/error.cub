@@ -1,6 +1,9 @@
 NO ./textures/wall_north.xpm
+
 SO ./textures/wall_south.xpm
+
 WE ./textures/wall_west.xpm
+
 EA ./textures/wall_eat.xpm
 
 F 220,100,0

@@ -17,9 +17,8 @@ void    ft_read_map(t_game *game, int fd)
     char    *line;
     int     map_started;
 
-    take_texture_wall(game, fd);
+    parse_config(game, fd);
     line = gnl(fd);
-    ft_init_map(&game->map);
     map_started = 0;
     while (line != NULL)
     {
@@ -143,11 +142,4 @@ int validate_map(t_game *game)
         return (0);
     }
     return (1);
-}
-
-void    ft_init_map(t_map *map)
-{
-    map->grid = NULL;
-    map->height = 0;
-    map->width = 0;
 }
