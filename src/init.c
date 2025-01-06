@@ -19,13 +19,11 @@ void init_game(t_game *game)
     game->mlx.mlx_ptr = mlx_init();
     if (!game->mlx.mlx_ptr)
         exit(EXIT_FAILURE);
-    game->mlx.win_ptr = mlx_new_window(game->mlx.mlx_ptr, game->mlx.width_windows, game->mlx.height_windows, "cub3D");
-    if (!game->mlx.mlx_ptr)
-        exit(EXIT_FAILURE);
-    game->map.texture_wall_n = NULL;
-    game->map.texture_wall_e = NULL;
-    game->map.texture_wall_s = NULL;
-    game->map.texture_wall_w = NULL;
+    game->map.path_texture_wall_n = NULL;
+    game->map.path_texture_wall_e = NULL;
+    game->map.path_texture_wall_s = NULL;
+    game->map.path_texture_wall_w = NULL;
+    game->map.image.img = mlx_new_image(game->mlx.mlx_ptr, 1280, 720);
     game->map.floor_color = 0;
     game->map.cap_color = 0;
     game->map.n_colors  = 0;

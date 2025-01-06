@@ -14,10 +14,12 @@
 
 int exit_prog(t_game *game)
 {
-    free(game->map.texture_wall_n);
-    free(game->map.texture_wall_s);
-    free(game->map.texture_wall_e);
-    free(game->map.texture_wall_w);
+    free(game->map.path_texture_wall_n);
+    free(game->map.path_texture_wall_s);
+    free(game->map.path_texture_wall_e);
+    free(game->map.path_texture_wall_w);
+    if (game->map.image.img)
+        mlx_destroy_image(game->mlx.mlx_ptr, game->map.image.img);
     free_map(&game->map);
     if (game->mlx.mlx_ptr && game->mlx.win_ptr)
 		mlx_destroy_window(game->mlx.mlx_ptr, game->mlx.win_ptr);
@@ -62,6 +64,37 @@ void print_map(t_game *game)
     }
 }
 
+void load_textures(t_game *game)
+{
+    load_texture(game, &game->map.texture_wall_n, game->map.path_texture_wall_n);
+    load_texture(game, &game->map.texture_wall_s, game->map.path_texture_wall_s);
+    load_texture(game, &game->map.texture_wall_e, game->map.path_texture_wall_e);
+    load_texture(game, &game->map.texture_wall_w, game->map.path_texture_wall_w);
+    game->map.image.data = mlx_get_data_addr(game->map.image.img, &game->map.image.bpp, &game->map.image.size_line, &game->map.image.endian);
+    if (!game->map.image.data)
+    {
+        ft_error("Failed to get texture data address");
+        exit_prog(game);
+    }
+}
+
+void load_texture(t_game *game, t_texture *texture, char *path)
+{
+    printf("Loading texture from path: %s\n", path);
+    texture->img = mlx_xpm_file_to_image(game->mlx.mlx_ptr, path, &texture->width, &texture->height);
+    if (!texture->img)
+    {
+        ft_error("Failed to load texture");
+        exit_prog(game);
+    }
+    texture->data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->size_line, &texture->endian);
+    if (!texture->data)
+    {
+        ft_error("Failed to get texture data address");
+        exit_prog(game);
+    }
+}
+
 int main_loop(t_game *game)
 {
     render_frame(game);
@@ -73,6 +106,7 @@ int main(int ac, char **av)
 {
     t_game  game;
 
+    game = (t_game){0};
     if (ac != 2)
     {
         ft_error("Invalid number of arguments\n");
@@ -83,6 +117,10 @@ int main(int ac, char **av)
     print_map(&game);
     if (!validate_map(&game))
         printf("Map Invalid\n");
+    game.mlx.win_ptr = mlx_new_window(game.mlx.mlx_ptr, game.mlx.width_windows, game.mlx.height_windows, "cub3D");
+    if (!game.mlx.mlx_ptr)
+        exit(EXIT_FAILURE);
+    load_textures(&game);
     render_frame(&game);
     mlx_hook(game.mlx.win_ptr, 2, 1L << 0, handle_keys, &game);
     mlx_hook(game.mlx.win_ptr, 3, 1L << 1, handle_keys_release, &game);

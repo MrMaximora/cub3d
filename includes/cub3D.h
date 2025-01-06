@@ -64,15 +64,30 @@ typedef struct s_player
     double  rot_speed;
 }   t_player;
 
+typedef struct s_texture
+{
+    int height;
+    int width;
+    int bpp;
+    int endian;
+    int size_line;
+    void *img;
+    char *data;
+}   t_texture;
+
 typedef struct s_map
 {
     char            **grid;
-    char            *texture_wall_n;
-    char            *texture_wall_s;
-    char            *texture_wall_e;
-    char            *texture_wall_w;
-    int            cap_color;
-    int            floor_color;
+    char            *path_texture_wall_n;
+    char            *path_texture_wall_s;
+    char            *path_texture_wall_e;
+    char            *path_texture_wall_w;
+    t_texture       texture_wall_n;
+    t_texture       texture_wall_s;
+    t_texture       texture_wall_e;
+    t_texture       texture_wall_w;
+    int             cap_color;
+    int             floor_color;
     int             width;
     int             height;
     int             stack_size;
@@ -94,7 +109,7 @@ typedef struct s_map
     double          perp_wall_dist;
     int             side;
     int             hit_wall;
-
+    t_texture       image;
 }   t_map;
 
 typedef struct s_game
@@ -127,7 +142,7 @@ void    calculate_ray(t_game *game, int x);
 void    perform_dda(t_game *game);
 int     handle_keys(int key, t_game *game);
 void    render_frame(t_game *game);
-void    draw_column(t_game *game, char *buffer, int x);
+void    draw_column(t_game *game, int x);
 void    calculate_wall_height(t_game *game);
 void    calculate_dist(t_game *game);
 void    calculate_step_and_side_dist(t_game *game);
@@ -153,5 +168,8 @@ void    parse_config(t_game *game, int fd);
 void    assign_texture(t_game *game, char *identifier, char *path);
 void    assign_color(t_game *game, char *identifier, char *value);
 void    parse_line(t_game *game, char *line);
+void    load_texture(t_game *game, t_texture *texture, char *file_path);
+void    load_textures(t_game *game);
+char	*ft_strndup(char *s, int n);
 
 #endif

@@ -43,13 +43,13 @@ void assign_texture(t_game *game, char *identifier, char *path)
         exit_prog(game);
     }
     if (!ft_strncmp(identifier, "NO", 2))
-        game->map.texture_wall_n = ft_strdup(path);
+        game->map.path_texture_wall_n = ft_strndup(path, ft_strlen(path) - 1);
     else if (!ft_strncmp(identifier, "SO", 2))
-        game->map.texture_wall_s = ft_strdup(path);
+        game->map.path_texture_wall_s = ft_strndup(path, ft_strlen(path) - 1);
     else if (!ft_strncmp(identifier, "WE", 2))
-        game->map.texture_wall_w = ft_strdup(path);
+        game->map.path_texture_wall_w = ft_strndup(path, ft_strlen(path) - 1);
     else if (!ft_strncmp(identifier, "EA", 2))
-        game->map.texture_wall_e = ft_strdup(path);
+        game->map.path_texture_wall_e = ft_strndup(path, ft_strlen(path) - 1);
     else
     {
         ft_error("Unknown texture identifier\n");

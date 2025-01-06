@@ -93,31 +93,23 @@ void calculate_wall_height(t_game *game)
 }
 
 void render_frame(t_game *game)
-{
-    void *image;
-    char *buffer;
-    int bpp, size_line, endian;
+{   
     int x;
 
-    image = mlx_new_image(game->mlx.mlx_ptr, game->mlx.width_windows, game->mlx.height_windows);
-    if (!image)
-        exit(EXIT_FAILURE);
-    buffer = mlx_get_data_addr(image, &bpp, &size_line, &endian);
-    if (!buffer)
-        exit(EXIT_FAILURE);
-    for (x = 0; x < game->mlx.width_windows; x++)
+    x = 0;
+    while (x < game->mlx.width_windows)
     {
         game->map.hit_wall = 0;
         calculate_ray(game, x);
         perform_dda(game);
         calculate_wall_height(game);
-        draw_column(game, buffer, x);
+        draw_column(game, x);
+        x++;
     }
-    mlx_put_image_to_window(game->mlx.mlx_ptr, game->mlx.win_ptr, image, 0, 0);
-    mlx_destroy_image(game->mlx.mlx_ptr, image);
+    mlx_put_image_to_window(game->mlx.mlx_ptr, game->mlx.win_ptr, game->map.image.img, 0, 0);
 }
 
-void draw_column(t_game *game, char *buffer, int x)
+/*void draw_column(t_game *game, char *buffer, int x)
 {
     int y;
     int ceiling_color = 0x87CEEB;
@@ -153,5 +145,84 @@ void draw_column(t_game *game, char *buffer, int x)
             buffer[pixel_pos * 4 + 1] = (floor_color >> 8) & 0xFF;  // Green
             buffer[pixel_pos * 4 + 2] = (floor_color >> 16) & 0xFF; // Red
         }
+    }
+}*/
+
+void    my_mlx_pixel_put(t_texture *texture, int x, int y, int color)
+{
+    char    *dst;
+
+    dst = texture->data + (y * texture->size_line + x * (texture->bpp / 8));
+    *(unsigned int*)dst = color;
+}
+
+void draw_column(t_game *game, int x)
+{
+    int tex_x;
+    int tex_y;
+    t_texture wall_texture;
+    int y;
+    int color;
+    // int d; // Distance from the top of the screen to the current pixel
+    double wall_x;
+
+    if (game->map.side == 0 && game->player.step_x > 0)
+        wall_texture = game->map.texture_wall_n;
+    else if (game->map.side == 0 && game->player.step_x < 0)
+        wall_texture = game->map.texture_wall_s;
+    else if (game->map.side == 1 && game->player.step_y > 0)
+        wall_texture = game->map.texture_wall_e;
+    else if (game->map.side == 1 && game->player.step_y < 0)
+        wall_texture = game->map.texture_wall_w;
+
+    if (game->map.side == 0)
+        wall_x = game->player.player_y + game->map.perp_wall_dist * game->player.ray_dir_y;
+    else
+        wall_x = game->player.player_x + game->map.perp_wall_dist * game->player.ray_dir_x;
+    wall_x -= floor(wall_x); // Remove the integer part to get the fractional part
+/*    tex_x = (int)(wall_x * (double)(wall_texture.width - 1));
+    if ((game->map.side == 0 && game->player.ray_dir_x > 0) || (game->map.side == 1 && game->player.ray_dir_y < 0))
+        tex_x = wall_texture.width - tex_x - 1;
+    y = game->map.draw_start;
+    while (y < game->map.draw_end)
+    {
+        d = y * 256 - game->mlx.height_windows * 128 + game->map.line_height * 128;
+        tex_y = ((d * wall_texture.height) / game->map.line_height) / 256;
+        color = wall_texture.data[wall_texture.width * tex_y + tex_x];
+        my_mlx_pixel_put(&game->map.image, x, y, color);
+        y++;
+    }*/
+    tex_x = (int)(wall_x * 160.f);
+    if ((game->map.side == 0 && game->player.ray_dir_x > 0) || (game->map.side == 1
+            && game->player.ray_dir_y < 0))
+        tex_x = 160.f - tex_x - 1;
+    double step = 1.0 * 160.f / game->map.line_height;
+    double tex_pos = (game->map.draw_start - game->mlx.height_windows / 2 + game->map.line_height / 2) * step;
+    y = game->map.draw_start - 1;
+    while (++y < game->map.draw_end)
+    {
+        tex_y = (int)tex_pos & (160 - 1);
+        tex_pos += step;
+        // color = wall_texture.data[wall_texture.width * tex_y + tex_x];
+        color = wall_texture.data[160 * tex_y * 4 + \
+        (tex_x - wall_texture.width + 1) * 4] << 16 | \
+        wall_texture.data[160 * tex_y * 4 + (tex_x - \
+        wall_texture.width + 1) * 4 + 1] << 8 | wall_texture.data[160 * tex_y * \
+        4 + (tex_x - wall_texture.width + 1) * 4 + 2];
+        // my_mlx_pixel_put(cb->image, x, y + 1, ray->color);
+        my_mlx_pixel_put(&game->map.image, x, y, color);
+    }
+    // Draw the floor and ceiling
+    y = 0;
+    while (y < game->map.draw_start)
+    {
+        my_mlx_pixel_put(&game->map.image, x, y, game->map.cap_color);
+        y++;
+    }
+    y = game->map.draw_end;
+    while (y < game->mlx.height_windows)
+    {
+        my_mlx_pixel_put(&game->map.image, x, y, game->map.floor_color);
+        y++;
     }
 }

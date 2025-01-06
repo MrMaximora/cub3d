@@ -196,13 +196,30 @@ char	*ft_strdup(char *s)
 	return (cpy);
 }
 
+char	*ft_strndup(char *s, int n)
+{
+	char			*res;
+	int	i;
+
+	i = 0;
+	res = malloc(sizeof(char) * (n + 1));
+	if (res == NULL)
+		return (NULL);
+	while (s[i] != '\0' && i < n)
+	{
+		res[i] = s[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
+}
+
 void free_split(char **split)
 {
     int i;
 
     if (!split)
         return;
-
     i = 0;
     while (split[i] != NULL)
     {
