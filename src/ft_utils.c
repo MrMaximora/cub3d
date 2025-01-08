@@ -45,35 +45,35 @@ char	*ft_strnstr(char *str, char *to_find, int len)
 	return (NULL);
 }
 
-char **ft_realloc(char **old, int new_size)
+char	**ft_realloc(char **old, int new_size)
 {
-    char **new;
-    int i;
+	char	**new;
+	int		i;
 
-    i = 0;
-    new = malloc(new_size * sizeof(char *));
-    if (!new)
-        return (NULL);
-    if (old)
-    {
-        while (old[i] && i < new_size)
-        {
-            new[i] = old[i];
-            i++;
-        }
-        free(old);
-    }
-    while (i < new_size)
+	i = 0;
+	new = malloc(new_size * sizeof(char *));
+	if (!new)
+		return (NULL);
+	if (old)
 	{
-        new[i] = NULL;
+		while (old[i] && i < new_size)
+		{
+			new[i] = old[i];
+			i++;
+		}
+		free(old);
+	}
+	while (i < new_size)
+	{
+		new[i] = NULL;
 		i++;
 	}
-    return (new);
+	return (new);
 }
 
-int is_valid_char(char c)
+int	is_valid_char(char c)
 {
-    return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == ' ');
+	return (c == '0' || c == '1' || c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == ' ');
 }
 
 int	ft_strncmp(char *s1, char *s2, unsigned int n)
@@ -125,13 +125,14 @@ static int	ft_len(char const *s, size_t len)
 	return (i);
 }
 
-int ft_split_len(char **split)
+int	ft_split_len(char **split)
 {
-    int len = 0;
+	int	len;
 
-    while (split[len] != NULL)
-        len++;
-    return len;
+	len = 0;
+	while (split[len] != NULL)
+		len++;
+	return (len);
 }
 
 char	*ft_strchr(char *s, int c)
@@ -198,8 +199,8 @@ char	*ft_strdup(char *s)
 
 char	*ft_strndup(char *s, int n)
 {
-	char			*res;
-	int	i;
+	char	*res;
+	int		i;
 
 	i = 0;
 	res = malloc(sizeof(char) * (n + 1));
@@ -214,19 +215,19 @@ char	*ft_strndup(char *s, int n)
 	return (res);
 }
 
-void free_split(char **split)
+void	free_split(char **split)
 {
-    int i;
+	int	i;
 
-    if (!split)
-        return;
-    i = 0;
-    while (split[i] != NULL)
-    {
-        free(split[i]);
-        i++;
-    }
-    free(split);
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i] != NULL)
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
 }
 
 static size_t	count_word(char *s, char sep)
