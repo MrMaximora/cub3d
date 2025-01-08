@@ -1,5 +1,5 @@
 C_FILES = cub3D.c \
-error.c \
+exit.c \
 ft_utils.c \
 parser_map.c \
 get_next_line_utils.c \

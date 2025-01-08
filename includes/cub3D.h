@@ -126,7 +126,6 @@ typedef struct s_game
 	t_mlx		mlx;
 }	t_game;
 
-void	ft_error(char *str);
 void	init_game(t_game *game);
 void	ft_parser_map(t_game *game, char **av);
 char	*ft_strnstr(char *str, char *to_find, int len);
@@ -143,7 +142,6 @@ int		validate_map(t_game *game);
 void	ft_solver_fill(t_game *game, int start_y, int start_x);
 int		ft_last_verif(t_game *game);
 int		is_closed(t_game *game, int new_y, int new_x);
-void	print_map(t_game *game);
 void	calculate_ray(t_game *game, int x);
 void	perform_dda(t_game *game);
 int		handle_keys(int key, t_game *game);

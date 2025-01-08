@@ -47,7 +47,6 @@ void	ft_solver_fill(t_game *game, int start_y, int start_x)
 			return ;
 		}
 	}
-	print_map(game);
 	free(stack);
 }
 
