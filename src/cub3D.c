@@ -12,34 +12,22 @@
 
 #include "../includes/cub3D.h"
 
-void	load_textures(t_game *game)
+void	render_frame(t_game *game)
 {
-	load_texture(game, &game->map.texture_wall_n, game->map.path_texture_wall_n);
-	load_texture(game, &game->map.texture_wall_s, game->map.path_texture_wall_s);
-	load_texture(game, &game->map.texture_wall_e, game->map.path_texture_wall_e);
-	load_texture(game, &game->map.texture_wall_w, game->map.path_texture_wall_w);
-	game->map.image.data = (unsigned char *)mlx_get_data_addr(game->map.image.img, &game->map.image.bpp, &game->map.image.size_line, &game->map.image.endian);
-	if (!game->map.image.data)
-	{
-		printf("Failed to get texture data address\n");
-		exit_prog(game);
-	}
-}
+	int	x;
 
-void	load_texture(t_game *game, t_texture *texture, char *path)
-{
-	texture->img = mlx_xpm_file_to_image(game->mlx.mlx_ptr, path, &texture->width, &texture->height);
-	if (!texture->img)
+	x = 0;
+	while (x < game->mlx.width_windows)
 	{
-		printf("Failed to load texture\n");
-		exit_prog(game);
+		game->map.hit_wall = 0;
+		calculate_ray(game, x);
+		perform_dda(game);
+		calculate_wall_height(game);
+		draw_wall(game, x);
+		x++;
 	}
-	texture->data = (unsigned char *)mlx_get_data_addr(texture->img, &texture->bpp, &texture->size_line, &texture->endian);
-	if (!texture->data)
-	{
-		printf("Failed to get texture data address\n");
-		exit_prog(game);
-	}
+	mlx_put_image_to_window(game->mlx.mlx_ptr, game->mlx.win_ptr, \
+		game->map.image.img, 0, 0);
 }
 
 int	main_loop(t_game *game)
@@ -66,7 +54,8 @@ int	main(int ac, char **av)
 		printf("Map Invalid\n");
 		exit_prog(&game);
 	}
-	game.mlx.win_ptr = mlx_new_window(game.mlx.mlx_ptr, game.mlx.width_windows, game.mlx.height_windows, "cub3D");
+	game.mlx.win_ptr = mlx_new_window(game.mlx.mlx_ptr, \
+		game.mlx.width_windows, game.mlx.height_windows, "cub3D");
 	if (!game.mlx.mlx_ptr)
 		exit(EXIT_FAILURE);
 	load_textures(&game);

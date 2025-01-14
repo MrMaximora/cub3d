@@ -30,7 +30,8 @@ void	ft_read_map(t_game *game, int fd)
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
 		map_started = 1;
-		game->map.grid = ft_realloc(game->map.grid, sizeof(char *)* (game->map.height + 1));
+		game->map.grid = ft_realloc(game->map.grid, sizeof(char *) * \
+			(game->map.height + 1));
 		game->map.grid[game->map.height] = line;
 		game->map.height++;
 		if (ft_strlen(line) > game->map.width)
@@ -59,58 +60,6 @@ void	ft_parser_map(t_game *game, char **av)
 	}
 	ft_read_map(game, fd);
 	close(fd);
-}
-
-int	is_closed(t_game *game, int new_y, int new_x)
-{
-	ft_solver_fill(game, new_y, new_x);
-	if (ft_last_verif(game) == 0)
-		return (1);
-	return (0);
-}
-
-void	attribute(t_game *game, char c)
-{
-	float	length_plane;
-
-	if (c == 'N')
-	{
-		game->player.player_dir_x = 0;
-		game->player.player_dir_y = -1;
-	}
-	else if (c == 'S')
-	{
-		game->player.player_dir_x = 0;
-		game->player.player_dir_y = 1;
-	}
-	else if (c == 'E')
-	{
-		game->player.player_dir_x = 1;
-		game->player.player_dir_y = 0;
-	}
-	else if (c == 'W')
-	{
-		game->player.player_dir_x = -1;
-		game->player.player_dir_y = 0;
-	}
-	length_plane = tan(66 / 2 * (M_PI / 180));
-	game->player.plane_x = length_plane * -game->player.player_dir_y;
-	game->player.plane_y = length_plane * game->player.player_dir_x;
-}
-
-int	place_player(t_game	*game, char c, int x, int y)
-{
-	int	player_count;
-
-	player_count = 0;
-	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
-	{
-		player_count++;
-		game->player.player_y = (float)y + 0.5;
-		game->player.player_x = (float)x + 0.5;
-		game->player.player_dir = c;
-	}
-	return (player_count);
 }
 
 int	verif_player_and_map(t_game *game, int player_count)

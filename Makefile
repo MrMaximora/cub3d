@@ -9,7 +9,12 @@ init.c \
 raycast.c \
 keys.c \
 move.c \
-parse_text.c
+parse_text.c \
+ft_utils2.c \
+ft_utils3.c \
+parse_map2.c \
+rot.c \
+draw.c
 
 SRC_DIR = ./src/
 MLX_DIR = ./minilibx-linux

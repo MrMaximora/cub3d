@@ -27,6 +27,21 @@ void	free_map(t_map *map)
 	free(map->grid);
 }
 
+void	free_split(char **split)
+{
+	int	i;
+
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i] != NULL)
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
 int	exit_prog(t_game *game)
 {
 	free(game->map.path_texture_wall_n);

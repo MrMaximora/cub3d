@@ -22,7 +22,8 @@ void	parse_line(t_game *game, char *line)
 		free_split(args);
 		return ;
 	}
-	if (!ft_strncmp(args[0], "NO", 2) || !ft_strncmp(args[0], "SO", 2) || !ft_strncmp(args[0], "WE", 2) || !ft_strncmp(args[0], "EA", 2))
+	if (!ft_strncmp(args[0], "NO", 2) || !ft_strncmp(args[0], "SO", 2) || \
+		!ft_strncmp(args[0], "WE", 2) || !ft_strncmp(args[0], "EA", 2))
 		assign_texture(game, args[0], args[1]);
 	else if (!ft_strncmp(args[0], "F", 1) || !ft_strncmp(args[0], "C", 1))
 		assign_color(game, args[0], args[1]);
@@ -71,16 +72,19 @@ void	assign_color(t_game *game, char *identifier, char *value)
 	game->map.r = ft_atoi(rgb[0]);
 	game->map.g = ft_atoi(rgb[1]);
 	game->map.b = ft_atoi(rgb[2]);
-	if (game->map.r < 0 || game->map.r > 255 || game->map.g < 0 || game->map.g > 255 || game->map.b < 0 || game->map.b > 255)
+	if (game->map.r < 0 || game->map.r > 255 || game->map.g < 0 || \
+		game->map.g > 255 || game->map.b < 0 || game->map.b > 255)
 	{
 		free_split(rgb);
 		printf("Color values must be between 0 and 255\n");
 		exit_prog(game);
 	}
 	if (!ft_strncmp(identifier, "F", 1))
-		game->map.floor_color = (game->map.r << 16) | (game->map.g << 8) | game->map.b;
+		game->map.floor_color = (game->map.r << 16) | (game->map.g << 8) \
+			| game->map.b;
 	else if (!ft_strncmp(identifier, "C", 1))
-		game->map.cap_color = (game->map.r << 16) | (game->map.g << 8) | game->map.b;
+		game->map.cap_color = (game->map.r << 16) | (game->map.g << 8) | \
+			game->map.b;
 	else
 	{
 		free_split(rgb);

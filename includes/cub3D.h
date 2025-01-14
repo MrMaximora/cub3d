@@ -113,7 +113,7 @@ typedef struct s_map
 	int			tex_y;
 	float		wall_x;
 	float		step;
-	int			texture_bpp;
+	int			bpp;
 	int			constant_column;
 	int			total_texture_size;
 	t_texture	image;
@@ -146,7 +146,7 @@ void	calculate_ray(t_game *game, int x);
 void	perform_dda(t_game *game);
 int		handle_keys(int key, t_game *game);
 void	render_frame(t_game *game);
-void	draw_column(t_game *game, int x);
+void	draw_wall(t_game *game, int x);
 void	calculate_wall_height(t_game *game);
 void	calculate_dist(t_game *game);
 void	calculate_step_and_side_dist(t_game *game);
@@ -176,5 +176,7 @@ void	load_texture(t_game *game, t_texture *texture, char *file_path);
 void	load_textures(t_game *game);
 char	*ft_strndup(char *s, int n);
 void	calculate_for_texture(t_game *game, t_texture *actual_wall);
+int		place_player(t_game	*game, char c, int x, int y);
+void	attribute(t_game *game, char c);
 
 #endif

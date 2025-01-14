@@ -35,11 +35,13 @@ void	ft_solver_fill(t_game *game, int start_y, int start_x)
 		game->map.grid[current.y][current.x] = 'V';
 		if (current.y > 0 && game->map.grid[current.y - 1][current.x] == '0')
 			stack[game->map.top++] = (t_point){current.y - 1, current.x};
-		if (current.y + 1 < game->map.height && game->map.grid[current.y + 1][current.x] == '0')
+		if (current.y + 1 < game->map.height && \
+			game->map.grid[current.y + 1][current.x] == '0')
 			stack[game->map.top++] = (t_point){current.y + 1, current.x};
 		if (current.x > 0 && game->map.grid[current.y][current.x - 1] == '0')
 			stack[game->map.top++] = (t_point){current.y, current.x - 1};
-		if (current.x + 1 < game->map.width && game->map.grid[current.y][current.x + 1] == '0')
+		if (current.x + 1 < game->map.width \
+			&& game->map.grid[current.y][current.x + 1] == '0')
 			stack[game->map.top++] = (t_point){current.y, current.x + 1};
 		if (game->map.top >= game->map.stack_size)
 		{
@@ -57,7 +59,7 @@ int	ft_last_verif(t_game *game)
 	char	current;
 
 	y = 0;
-	while (y < game->map.height)    
+	while (y < game->map.height)
 	{
 		x = 0;
 		while (x < ft_strlen(game->map.grid[y]))
@@ -65,18 +67,23 @@ int	ft_last_verif(t_game *game)
 			current = game->map.grid[y][x];
 			if (current == '0' || current == 'V' || current == 'N')
 			{
-				if (x == 0 || y == 0 || y == game->map.height - 1 || x == game->map.width - 1)
+				if (x == 0 || y == 0 || y == game->map.height - 1 || \
+					x == game->map.width - 1)
 				{
 					if (current != '1')
 						return (1);
 				}
-				if (y > 0 && (game->map.grid[y - 1][x] == ' ' || game->map.grid[y - 1][x] == '\0'))
+				if (y > 0 && (game->map.grid[y - 1][x] == ' ' || \
+					game->map.grid[y - 1][x] == '\0'))
 					return (1);
-				if (y + 1 < game->map.height && (game->map.grid[y + 1][x] == ' ' || game->map.grid[y + 1][x] == '\0'))
+				if (y + 1 < game->map.height && (game->map.grid[y + 1][x] == \
+					' ' || game->map.grid[y + 1][x] == '\0'))
 					return (1);
-				if (x > 0 && (game->map.grid[y][x - 1] == ' ' || game->map.grid[y][x - 1] == '\0'))
+				if (x > 0 && (game->map.grid[y][x - 1] == ' ' || \
+					game->map.grid[y][x - 1] == '\0'))
 					return (1);
-				if (x + 1 < game->map.width && (game->map.grid[y][x + 1] == ' ' || game->map.grid[y][x + 1] == '\0'))
+				if (x + 1 < game->map.width && (game->map.grid[y][x + 1] == \
+					' ' || game->map.grid[y][x + 1] == '\0'))
 					return (1);
 			}
 			x++;
