@@ -102,6 +102,8 @@ typedef struct s_map
 	int			r;
 	int			g;
 	int			b;
+	int			px;
+	int			color;
 	float		side_dist_x;
 	float		side_dist_y;
 	float		delta_dist_x;

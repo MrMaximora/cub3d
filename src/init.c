@@ -33,6 +33,8 @@ void	init_help(t_game *game)
 	game->map.grid = NULL;
 	game->map.height = 0;
 	game->map.width = 0;
+	game->map.px = 0;
+	game->map.color = 0;
 }
 
 void	init_game(t_game *game)

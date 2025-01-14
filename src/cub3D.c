@@ -64,5 +64,4 @@ int	main(int ac, char **av)
 	mlx_hook(game.mlx.win_ptr, 17, 1L << 17, exit_prog, &game);
 	mlx_loop_hook(game.mlx.mlx_ptr, main_loop, &game);
 	mlx_loop(game.mlx.mlx_ptr);
-	free_map(&game.map);
 }

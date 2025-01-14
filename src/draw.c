@@ -82,28 +82,25 @@ void	draw_wall(t_game *game, int x)
 {
 	t_texture	wall;
 	int			y;
-	int			color;
-	int			index;
 
 	wall = *wall_dir(&wall, game);
 	calculate_for_texture(game, &wall);
 	y = game->map.draw_start - 1;
 	if (y < 0)
 		y = 0;
-	while (y < game->map.draw_end)
+	while (y++ < game->map.draw_end)
 	{
 		game->map.tex_y = (float)(y - game->map.draw_start - 1) \
 			* game->map.step;
-		index = game->map.tex_y * wall.width * game->map.bpp \
+		game->map.px = game->map.tex_y * wall.width * game->map.bpp \
 			+ game->map.constant_column;
-		if (index >= 0 && index < game->map.total_texture_size)
+		if (game->map.px >= 0 && game->map.px < game->map.total_texture_size)
 		{
-			color = (wall.data[index + 2] << 16) | \
-				(wall.data[index + 1] << 8) | (wall.data[index]);
+			game->map.color = (wall.data[game->map.px + 2] << 16) | \
+				(wall.data[game->map.px + 1] << 8) | (wall.data[game->map.px]);
 			if (y >= 0 && y < game->mlx.height_windows)
-				my_mlx_pixel_put(&game->map.image, x, y, color);
+				my_mlx_pixel_put(&game->map.image, x, y, game->map.color);
 		}
-		y++;
 		if (y > game->mlx.height_windows)
 			break ;
 	}

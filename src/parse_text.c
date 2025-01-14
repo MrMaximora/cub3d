@@ -59,6 +59,22 @@ void	assign_texture(t_game *game, char *identifier, char *path)
 	game->map.n_textures++;
 }
 
+void	assign_color_help(t_game *game, char *identifier, char **rgb)
+{
+	if (!ft_strncmp(identifier, "F", 1))
+		game->map.floor_color = (game->map.r << 16) | (game->map.g << 8) \
+			| game->map.b;
+	else if (!ft_strncmp(identifier, "C", 1))
+		game->map.cap_color = (game->map.r << 16) | (game->map.g << 8) | \
+			game->map.b;
+	else
+	{
+		free_split(rgb);
+		printf("Unknown color identifier\n");
+		exit_prog(game);
+	}
+}
+
 void	assign_color(t_game *game, char *identifier, char *value)
 {
 	char	**rgb;
@@ -79,18 +95,7 @@ void	assign_color(t_game *game, char *identifier, char *value)
 		printf("Color values must be between 0 and 255\n");
 		exit_prog(game);
 	}
-	if (!ft_strncmp(identifier, "F", 1))
-		game->map.floor_color = (game->map.r << 16) | (game->map.g << 8) \
-			| game->map.b;
-	else if (!ft_strncmp(identifier, "C", 1))
-		game->map.cap_color = (game->map.r << 16) | (game->map.g << 8) | \
-			game->map.b;
-	else
-	{
-		free_split(rgb);
-		printf("Unknown color identifier\n");
-		exit_prog(game);
-	}
+	assign_color_help(game, identifier, rgb);
 	free_split(rgb);
 	game->map.n_colors++;
 }

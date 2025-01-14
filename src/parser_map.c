@@ -15,21 +15,18 @@
 void	ft_read_map(t_game *game, int fd)
 {
 	char	*line;
-	int		map_started;
 
 	parse_config(game, fd);
 	line = gnl(fd);
-	map_started = 0;
 	while (line != NULL)
 	{
-		if (!map_started && ft_strlen(line) == 0)
+		if (ft_strlen(line) == 0)
 		{
 			free(line);
 			continue ;
 		}
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
-		map_started = 1;
 		game->map.grid = ft_realloc(game->map.grid, sizeof(char *) * \
 			(game->map.height + 1));
 		game->map.grid[game->map.height] = line;
